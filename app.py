@@ -4,9 +4,9 @@ from flask_cors import CORS
 from flask_jwt import JWT
 from flask_restful import Api
 
-from employee import Employee, Team
+from resources.employee import Employee, Team
 from security import authenticate, identity
-from user import UserRegister
+from resources.user import UserRegister
 
 app = Flask(__name__)
 app.secret_key = 'random'
