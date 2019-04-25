@@ -7,8 +7,8 @@ create_table = "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY , " \
                "username text, password text)"
 cursor.execute(create_table)
 
-create_table = "CREATE TABLE IF NOT EXISTS employees (employeeID INTEGER PRIMARY KEY , " \
-               "prodHours real, teamID text)"
+create_table = "CREATE TABLE IF NOT EXISTS employees (employee_id INTEGER PRIMARY KEY , " \
+               "prod_hours real, team_id text)"
 cursor.execute(create_table)
 
 connection.commit()

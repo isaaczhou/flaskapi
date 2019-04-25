@@ -29,7 +29,7 @@ class Employee(Resource):
         data = self.parser.parse_args()
         new_employee = EmployeeModel(id, data["prodHours"], data["teamID"])
         try:
-            new_employee.insert_employee()
+            new_employee.save_to_db()
         except:
             return {"msg": "An error occurred inserting the item"}, 500
 
@@ -37,30 +37,27 @@ class Employee(Resource):
 
     @jwt_required()
     def delete(self, id):
-        connection = sqlite3.connect("data.db")
-        cursor = connection.cursor()
-        query = "DELETE FROM employees WHERE employeeID = ?"
-        cursor.execute(query, (id,))
-        connection.commit()
-        connection.close()
-        return {"msg": "Item with ID {a} was deleted".format(a=id)}
+        employee = EmployeeModel.find_by_id(id)
+        if employee:
+            employee.delete_from_db()
+            return {"msg": "Item with ID {a} was deleted".format(a=id)}, 200
+        else:
+            return {"msg": "Item with ID {a} was not found".format(a=id)}, 400
 
     @jwt_required()
     def put(self, id):
         data = self.parser.parse_args()
 
         employee = EmployeeModel.find_by_id(id)
-        new_employee = EmployeeModel(id, data["prodHours"], data["teamID"])
 
         if employee is None:
-            try:
-                new_employee.insert_employee()
-            except:
-                return {"msg": "An error occurred inserting the item"}, 500
-        else:
-            new_employee.update()
+            employee = EmployeeModel(id, data["prodHours"], data["teamID"])
 
-        return new_employee.json()
+        else:
+            employee.prod_hours, employee.team_id = data["prodHours"], data["teamID"]
+
+        employee.save_to_db()
+        return employee.json()
 
 
 class Team(Resource):
