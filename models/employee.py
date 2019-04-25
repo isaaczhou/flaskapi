@@ -1,7 +1,15 @@
 import sqlite3
+from db import db
 
+class EmployeeModel(db.Model):
+    """
+    Employees Model
+    """
+    __tablename__ = "employees"
+    employee_id = db.Column(db.Integer, primary_key=True)
+    prod_hours = db.Column(db.Float(precision=2))
+    team_id = db.Column(db.String(80))
 
-class EmployeeModel:
     def __init__(self, _id, prod_hours, team_id):
         self._id = _id
         self.prod_hours = prod_hours
