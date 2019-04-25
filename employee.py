@@ -20,7 +20,31 @@ class Employee(Resource):
         row = result.fetchone()
         connection.close()
         if row:
-            return {"employee": row}
+            return {"employee": {
+                "employeeID": row[0],
+                "prodHours": row[1],
+                "teamID": row[2]
+            }}
+
+    @classmethod
+    def insert_employee(cls, employee):
+        connection = sqlite3.connect("data.db")
+        cursor = connection.cursor()
+        query = "INSERT INTO employees VALUES (?,?,?)"
+        cursor.execute(query, (employee["employeeID"],
+                               employee["prodHours"],
+                               employee["teamID"]))
+        connection.commit()
+        connection.close()
+
+    @classmethod
+    def update(cls, employee):
+        connection = sqlite3.connect("data.db")
+        cursor = connection.cursor()
+        query = "UPDATE employees SET prodHours=?, teamID=? WHERE employeeID=?"
+        cursor.execute(query, (employee["prodHours"], employee["teamID"], employee["employeeID"]))
+        connection.commit()
+        connection.close()
 
     @jwt_required()
     def get(self, id):
@@ -41,33 +65,65 @@ class Employee(Resource):
             "prodHours": data["prodHours"],
             "teamID": data["teamID"]
         }
+        try:
+            self.insert_employee(new_employee)
+        except:
+            return {"msg": "An error occurred inserting the item"}, 500
 
-        connection = sqlite3.connect("data.db")
-        cursor = connection.cursor()
-        query = "INSERT INTO employees VALUES (?,?,?)"
-        cursor.execute(query, (new_employee["employeeID"],
-                               new_employee["prodHours"],
-                               new_employee["teamID"]))
-        connection.commit()
-        connection.close()
         return new_employee, 201
 
+    @jwt_required()
     def delete(self, id):
-        global employees
-        employees = list(filter(lambda x: x["employeeID"] != id, employees))
+        connection = sqlite3.connect("data.db")
+        cursor = connection.cursor()
+        query = "DELETE FROM employees WHERE employeeID = ?"
+        cursor.execute(query, (id,))
+        connection.commit()
+        connection.close()
         return {"msg": "Item with ID {a} was deleted".format(a=id)}
 
+    @jwt_required()
     def put(self, id):
         data = self.parser.parse_args()
 
-        employee = next(filter(lambda x: x["employeeID"] == id, employees), None)
+        employee = self.find_by_id(id)
+        new_employee = {
+            "employeeID": id,
+            "prodHours": data["prodHours"],
+            "teamID": data["teamID"]
+        }
+
         if employee is None:
-            return self.post(id)
+            try:
+                self.insert_employee(new_employee)
+            except:
+                return {"msg": "An error occurred inserting the item"}, 500
         else:
-            employee.update(data)
-        return employee
+            self.update(new_employee)
+
+        return new_employee
 
 
 class Team(Resource):
+    @classmethod
+    @jwt_required()
+    def get_all(cls):
+        connection = sqlite3.connect("data.db")
+        cursor = connection.cursor()
+        query = "SELECT * FROM employees"
+        result = cursor.execute(query)
+        rows = result.fetchall()
+        connection.close()
+        all_employees = []
+        if rows:
+            for row in rows:
+                all_employees.append(
+                    {"employee": {
+                        "employeeID": row[0],
+                        "prodHours": row[1],
+                        "teamID": row[2]
+                    }})
+        return all_employees
+
     def get(self):
-        return {"team": employees}
+        return {"team": self.get_all()}
