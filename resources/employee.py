@@ -6,9 +6,11 @@ from models.employee import EmployeeModel
 
 class Employee(Resource):
     parser = reqparse.RequestParser()
-    parser.add_argument("teamID", type=str,
+    parser.add_argument("team_id", type=str,
                         required=True, help="This field cannot be left blank!")
-    parser.add_argument("prodHours", type=float,
+    parser.add_argument("prod_hours", type=float,
+                        required=True, help="This field cannot be left blank!")
+    parser.add_argument("location_id", type=int,
                         required=True, help="This field cannot be left blank!")
 
     @jwt_required()
@@ -25,7 +27,7 @@ class Employee(Resource):
             return {"msg": "An item with id {a} already exists".format(a=id)}, 400
 
         data = self.parser.parse_args()
-        new_employee = EmployeeModel(id, data["prodHours"], data["teamID"])
+        new_employee = EmployeeModel(id, **data)
         try:
             new_employee.save_to_db()
         except:
@@ -49,10 +51,12 @@ class Employee(Resource):
         employee = EmployeeModel.find_by_id(id)
 
         if employee is None:
-            employee = EmployeeModel(id, data["prodHours"], data["teamID"])
+            employee = EmployeeModel(id, **data)
 
         else:
-            employee.prod_hours, employee.team_id = data["prodHours"], data["teamID"]
+            employee.prod_hours = data["prod_hours"]
+            employee.team_id = data["team_id"]
+            employee.location_id = data["location_id"]
 
         employee.save_to_db()
         return employee.json()
