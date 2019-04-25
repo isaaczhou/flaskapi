@@ -13,7 +13,7 @@ class EmployeeModel(db.Model):
     team_id = db.Column(db.String(80))
 
     def __init__(self, employee_id, prod_hours, team_id):
-        self._id = employee_id
+        self.employee_id = employee_id
         self.prod_hours = prod_hours
         self.team_id = team_id
 

@@ -1,5 +1,3 @@
-import sqlite3
-
 from flask_jwt import jwt_required
 from flask_restful import Resource, reqparse
 
@@ -61,25 +59,8 @@ class Employee(Resource):
 
 
 class Team(Resource):
-    @classmethod
-    @jwt_required()
-    def get_all(cls):
-        connection = sqlite3.connect("data.db")
-        cursor = connection.cursor()
-        query = "SELECT * FROM employees"
-        result = cursor.execute(query)
-        rows = result.fetchall()
-        connection.close()
-        all_employees = []
-        if rows:
-            for row in rows:
-                all_employees.append(
-                    {"employee": {
-                        "employeeID": row[0],
-                        "prodHours": row[1],
-                        "teamID": row[2]
-                    }})
-        return all_employees
 
     def get(self):
-        return {"team": self.get_all()}
+
+        employees = EmployeeModel.query.all()
+        return [employee.json() for employee in employees], 200
