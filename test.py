@@ -10,9 +10,9 @@ insert_query = "INSERT INTO users VALUES (?,?,?)"
 cursor.execute(insert_query, user)
 
 users = [
-    (2, "Isaac", "123456"),
-    (3, "Isaac", "123456"),
-    (4, "Isaac", "123456")
+    (2, "rolf", "34567"),
+    (3, "test1", "test1"),
+    (4, "test2", "test2")
 ]
 
 cursor.executemany(insert_query, users)
