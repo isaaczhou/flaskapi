@@ -12,12 +12,15 @@ class LocationModel(db.Model):
     # back reference
     employees = db.relationship("EmployeeModel", lazy="dynamic")
 
-    def __init__(self, location_name):
-        self.fullname = location_name
+    def __init__(self, location_id, location_name):
+        self.location_id = location_id
+        self.location_name = location_name
 
     def json(self):
-        return {"location_name": self.location_name,
-                "employees": [employee.json() for employee in self.employees.all()]}
+        return {
+            "location_id": self.location_id,
+            "location_name": self.location_name,
+            "employees": [employee.json() for employee in self.employees.all()]}
 
     @classmethod
     def find_by_id(cls, location_id):

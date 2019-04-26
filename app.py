@@ -11,7 +11,8 @@ from resources.user import UserRegister
 from security import authenticate, identity
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"
+# app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:Isaac800@localhost/majorperktest"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.secret_key = 'isaac'
 CORS(app)
@@ -27,9 +28,9 @@ app.config['JWT_AUTH_URL_RULE'] = '/login'
 app.config['JWT_EXPIRATION_DELTA'] = timedelta(seconds=1800)
 jwt = JWT(app, authenticate, identity)
 
-api.add_resource(Employee, "/employee/<string:id>")
+api.add_resource(Employee, "/employee/<string:employee_id>")
 api.add_resource(Team, "/employees")
-api.add_resource(Location, "/location/<string:id>")
+api.add_resource(Location, "/location/<string:location_id>")
 api.add_resource(LocationList, "/locations")
 api.add_resource(UserRegister, "/register")
 

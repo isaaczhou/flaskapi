@@ -14,20 +14,20 @@ class Employee(Resource):
                         required=True, help="This field cannot be left blank!")
 
     @jwt_required()
-    def get(self, id):
-        employee = EmployeeModel.find_by_id(id)
+    def get(self, employee_id):
+        employee = EmployeeModel.find_by_id(employee_id)
         if employee:
             return employee.json(), 200
         return {"msg": "No Employee with that ID"}, 404
 
     @jwt_required()
-    def post(self, id):
-        employee = EmployeeModel.find_by_id(id)
+    def post(self, employee_id):
+        employee = EmployeeModel.find_by_id(employee_id)
         if employee:
-            return {"msg": "An item with id {a} already exists".format(a=id)}, 400
+            return {"msg": "An item with id {a} already exists".format(a=employee_id)}, 400
 
         data = self.parser.parse_args()
-        new_employee = EmployeeModel(id, **data)
+        new_employee = EmployeeModel(employee_id, **data)
         try:
             new_employee.save_to_db()
         except:
@@ -36,22 +36,22 @@ class Employee(Resource):
         return new_employee.json(), 201
 
     @jwt_required()
-    def delete(self, id):
-        employee = EmployeeModel.find_by_id(id)
+    def delete(self, employee_id):
+        employee = EmployeeModel.find_by_id(employee_id)
         if employee:
             employee.delete_from_db()
-            return {"msg": "Item with ID {a} was deleted".format(a=id)}, 200
+            return {"msg": "Item with ID {a} was deleted".format(a=employee_id)}, 200
         else:
-            return {"msg": "Item with ID {a} was not found".format(a=id)}, 400
+            return {"msg": "Item with ID {a} was not found".format(a=employee_id)}, 400
 
     @jwt_required()
-    def put(self, id):
+    def put(self, employee_id):
         data = self.parser.parse_args()
 
-        employee = EmployeeModel.find_by_id(id)
+        employee = EmployeeModel.find_by_id(employee_id)
 
         if employee is None:
-            employee = EmployeeModel(id, **data)
+            employee = EmployeeModel(employee_id, **data)
 
         else:
             employee.prod_hours = data["prod_hours"]
