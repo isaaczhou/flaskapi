@@ -1,3 +1,4 @@
+import math
 from flask_jwt import jwt_required
 from flask_restful import Resource, reqparse
 
@@ -6,18 +7,16 @@ from models.employee import EmployeeModel
 
 class Employee(Resource):
     parser = reqparse.RequestParser()
-    parser.add_argument("team_id", type=str,
+    parser.add_argument("firstname", type=str,
                         required=True, help="This field cannot be left blank!")
-    parser.add_argument("prod_hours", type=float,
-                        required=True, help="This field cannot be left blank!")
-    parser.add_argument("location_id", type=int,
+    parser.add_argument("lastname", type=str,
                         required=True, help="This field cannot be left blank!")
 
     @jwt_required()
     def get(self, employee_id):
         employee = EmployeeModel.find_by_id(employee_id)
         if employee:
-            return employee.json(), 200
+            return employee.json_ts(), 200
         return {"msg": "No Employee with that ID"}, 404
 
     @jwt_required()
@@ -54,9 +53,8 @@ class Employee(Resource):
             employee = EmployeeModel(employee_id, **data)
 
         else:
-            employee.prod_hours = data["prod_hours"]
-            employee.team_id = data["team_id"]
-            employee.location_id = data["location_id"]
+            employee.firstname = data["firstname"]
+            employee.lastname = data["lastname"]
 
         employee.save_to_db()
         return employee.json()
@@ -65,6 +63,15 @@ class Employee(Resource):
 class Team(Resource):
 
     def get(self):
-
         employees = EmployeeModel.query.all()
-        return [employee.json() for employee in employees], 200
+        to_return = {
+            "code": 0,
+            "result": {
+                "page": 1,
+                "page_size": 10,
+                "total_count": len(employees),
+                "page_count": math.ceil(len(employees) / 10),
+                "data_list": [employee.json() for employee in employees]
+            }
+        }
+        return to_return
