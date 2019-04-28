@@ -28,6 +28,7 @@ class EmployeeTSModel(db.Model):
     absenteeism = db.Column(db.Float(precision=2))
     input_data_error = db.Column(db.Float(precision=2))
     contact_quality = db.Column(db.Float(precision=2))
+    ratings = db.Column(db.Float(precision=2))
     # define foreign key
     employee = db.relationship("EmployeeModel")
     location = db.relationship("LocationModel")
@@ -36,7 +37,7 @@ class EmployeeTSModel(db.Model):
                  firstname, lastname, fullname, team_id, team_name,
                  location_id, location_name, prod_hours, sales, avg_speed_answer,
                  avg_handle, first_call_resolution, customer_satisfaction,
-                 absenteeism, input_data_error, contact_quality):
+                 absenteeism, input_data_error, contact_quality, ratings):
         self.employee_ts_id = employee_ts_id
         self.workdate = workdate
         self.employee_id = employee_id
@@ -56,6 +57,7 @@ class EmployeeTSModel(db.Model):
         self.absenteeism = absenteeism
         self.input_data_error = input_data_error
         self.contact_quality = contact_quality
+        self.ratings = ratings
 
     def json(self):
         return {
@@ -78,6 +80,7 @@ class EmployeeTSModel(db.Model):
             "absenteeism": self.absenteeism,
             "input_data_error": self.input_data_error,
             "contact_quality": self.contact_quality,
+            "ratings": self.ratings,
         }
 
     @classmethod

@@ -44,7 +44,8 @@ class EmployeeTS(Resource):
                         required=True, help="This field cannot be left blank!")
     parser.add_argument("contact_quality", type=float,
                         required=True, help="This field cannot be left blank!")
-
+    parser.add_argument("ratings", type=float,
+                        required=True, help="This field cannot be left blank!")
     @jwt_required()
     def get(self, employee_ts_id):
         employee = EmployeeTSModel.find_by_id(employee_ts_id)

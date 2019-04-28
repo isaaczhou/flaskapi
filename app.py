@@ -13,7 +13,7 @@ from security import authenticate, identity
 
 app = Flask(__name__)
 # app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:Isaac800@localhost/majorperk"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:Isaac800@localhost/mpdemo"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.secret_key = 'isaac'
 CORS(app)
@@ -34,7 +34,7 @@ api.add_resource(Team, "/employees")
 api.add_resource(Location, "/location/<string:location_id>")
 api.add_resource(LocationList, "/locations")
 api.add_resource(UserRegister, "/register")
-api.add_resource(EmployeeTS, "/employeets/<string:employee_ts_id>")
+api.add_resource(EmployeeTS, "/employeets/employee_ts_id=<string:employee_ts_id>")
 api.add_resource(AllEmployeeTS, "/employeets")
 
 if __name__ == "__main__":

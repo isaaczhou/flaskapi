@@ -25,6 +25,8 @@ class EmployeeModel(db.Model):
     absenteeism = db.Column(db.Float)
     input_data_error = db.Column(db.Float)
     contact_quality = db.Column(db.Float)
+    ratings = db.Column(db.Float)
+    status = db.Column(db.Integer)
 
     location = db.relationship("LocationModel")
 
@@ -34,7 +36,7 @@ class EmployeeModel(db.Model):
                  team_name, location_name, prod_hours, sales,
                  avg_speed_answer, avg_handle, first_call_resolution,
                  customer_satisfaction, absenteeism, input_data_error,
-                 contact_quality):
+                 contact_quality, ratings, status):
         self.employee_id = employee_id
         self.firstname = firstname
         self.lastname = lastname
@@ -49,6 +51,8 @@ class EmployeeModel(db.Model):
         self.absenteeism = absenteeism
         self.input_data_error = input_data_error
         self.contact_quality = contact_quality
+        self.ratings = ratings
+        self.status = status
 
     def json(self):
         return {"employee_id": self.employee_id,
@@ -65,6 +69,8 @@ class EmployeeModel(db.Model):
                 "absenteeism": self.absenteeism,
                 "input_data_error": self.input_data_error,
                 "contact_quality": self.contact_quality,
+                "ratings": self.ratings,
+                "status": self.status,
                 }
 
     def json_ts(self):
