@@ -1,3 +1,4 @@
+import math
 from flask_jwt import jwt_required
 from flask_restful import Resource, reqparse
 
@@ -52,4 +53,15 @@ class Location(Resource):
 class LocationList(Resource):
     @jwt_required()
     def get(self):
-        return {"locations": [loc.json() for loc in LocationModel.query.all()]}, 200
+        locations = [loc.json() for loc in LocationModel.query.all()]
+        to_return = {
+            "code": 0,
+            "result": {
+                "page": 1,
+                "page_size": 10,
+                "total_count": len(locations),
+                "page_count": math.ceil(len(locations) / 10),
+                "data_list": locations
+            }
+        }
+        return to_return

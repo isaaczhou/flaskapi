@@ -10,7 +10,7 @@ class EmployeeModel(db.Model):
     firstname = db.Column(db.String(80))
     lastname = db.Column(db.String(80))
 
-    team_id = db.Column(db.Integer)
+    team_id = db.Column(db.Integer, db.ForeignKey("teams.team_id"))
     team_name = db.Column(db.String(80))
     # define foreign key
     location_id = db.Column(db.Integer, db.ForeignKey("locations.location_id"))
@@ -29,6 +29,7 @@ class EmployeeModel(db.Model):
     status = db.Column(db.Integer)
 
     location = db.relationship("LocationModel")
+    team = db.relationship("TeamModel")
 
     employeests = db.relationship("EmployeeTSModel", lazy="dynamic")
 

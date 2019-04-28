@@ -1,5 +1,6 @@
 from datetime import datetime
 
+import math
 from flask_jwt import jwt_required
 from flask_restful import Resource, reqparse
 
@@ -46,11 +47,12 @@ class EmployeeTS(Resource):
                         required=True, help="This field cannot be left blank!")
     parser.add_argument("ratings", type=float,
                         required=True, help="This field cannot be left blank!")
+
     @jwt_required()
-    def get(self, employee_ts_id):
-        employee = EmployeeTSModel.find_by_id(employee_ts_id)
-        if employee:
-            return employee.json(), 200
+    def get(self, employee_id):
+        employeets = EmployeeTSModel.find_by_id(employee_id)
+        if employeets:
+            return [emp_ts.json() for emp_ts in employeets]
         return {"msg": "No Record with that ID"}, 404
 
     @jwt_required()
@@ -98,4 +100,14 @@ class AllEmployeeTS(Resource):
 
     def get(self):
         employees_ts = EmployeeTSModel.query.all()
-        return [employeets.json() for employeets in employees_ts], 200
+        to_return = {
+            "code": 0,
+            "result": {
+                "page": 1,
+                "page_size": 10,
+                "total_count": len(employees_ts),
+                "page_count": math.ceil(len(employees_ts) / 10),
+                "data_list": [employeets.json() for employeets in employees_ts]
+            }
+        }
+        return to_return

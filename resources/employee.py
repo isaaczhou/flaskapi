@@ -60,7 +60,7 @@ class Employee(Resource):
         return employee.json()
 
 
-class Team(Resource):
+class Employees(Resource):
 
     def get(self):
         employees = EmployeeModel.query.all()

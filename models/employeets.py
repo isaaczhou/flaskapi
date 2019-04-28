@@ -84,8 +84,8 @@ class EmployeeTSModel(db.Model):
         }
 
     @classmethod
-    def find_by_id(cls, employee_ts_id):
-        return cls.query.filter_by(employee_ts_id=employee_ts_id).first()
+    def find_by_id(cls, employee_id):
+        return cls.query.filter_by(employee_id=employee_id).all()
 
     @classmethod
     def find_by_fullname(cls, fullname):

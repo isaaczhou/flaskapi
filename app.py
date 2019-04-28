@@ -5,9 +5,12 @@ from flask_cors import CORS
 from flask_jwt import JWT
 from flask_restful import Api
 
-from resources.employee import Employee, Team
+from resources.employee import Employee, Employees
 from resources.employeets import EmployeeTS, AllEmployeeTS
 from resources.location import Location, LocationList
+from resources.locationts import LocationTSList, LocationTS
+from resources.team import TeamList, Team
+from resources.teamts import TeamTS, TeamTSList
 from resources.user import UserRegister
 from security import authenticate, identity
 
@@ -30,12 +33,18 @@ app.config['JWT_EXPIRATION_DELTA'] = timedelta(seconds=86400)
 jwt = JWT(app, authenticate, identity)
 
 api.add_resource(Employee, "/employee/employee_id=<string:employee_id>")
-api.add_resource(Team, "/employees")
-api.add_resource(Location, "/location/<string:location_id>")
+api.add_resource(Employees, "/employees")
+api.add_resource(Location, "/location/location_id=<string:location_id>")
 api.add_resource(LocationList, "/locations")
-api.add_resource(UserRegister, "/register")
-api.add_resource(EmployeeTS, "/employeets/employee_ts_id=<string:employee_ts_id>")
+api.add_resource(Team, "/teams/team_id=<string:team_id>")
+api.add_resource(TeamList, "/teams")
+api.add_resource(LocationTS, "/locationts/location_id=<string:location_id>")
+api.add_resource(LocationTSList, "/locationts")
+api.add_resource(TeamTS, "/teamts/team_id=<string:team_id>")
+api.add_resource(TeamTSList, "/teamts")
+api.add_resource(EmployeeTS, "/employeets/employee_id=<string:employee_id>")
 api.add_resource(AllEmployeeTS, "/employeets")
+api.add_resource(UserRegister, "/register")
 
 if __name__ == "__main__":
     from db import db

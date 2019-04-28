@@ -1,14 +1,19 @@
+from json import dumps
+
 from db import db
 
 
-class TeamModel(db.Model):
+class TeamTSModel(db.Model):
     """
     Locations Model
     """
-    __tablename__ = "teams"
-    team_id = db.Column(db.Integer, primary_key=True)
+    __tablename__ = "teamts"
+    team_ts_id = db.Column(db.Integer, primary_key=True)
+    team_id = db.Column(db.Integer)
     team_name = db.Column(db.String(80))
+    date = db.Column(db.DATE)
     num_employees = db.Column(db.Integer)
+
     prod_hours = db.Column(db.Float)
     sales = db.Column(db.Float)
     avg_speed_answer = db.Column(db.Float)
@@ -19,17 +24,15 @@ class TeamModel(db.Model):
     input_data_error = db.Column(db.Float)
     contact_quality = db.Column(db.Float)
     ratings = db.Column(db.Float)
-    active_counts = db.Column(db.Float)
 
-    # back reference
-    employees = db.relationship("EmployeeModel", lazy="dynamic")
-
-    def __init__(self, team_id, team_name, num_employees,
+    def __init__(self, team_ts_id, team_id, team_name, date, num_employees,
                  prod_hours, sales, avg_speed_answer, avg_handle,
                  first_call_resolution, customer_satisfaction, absenteeism,
-                 input_data_error, contact_quality, ratings, active_counts):
+                 input_data_error, contact_quality, ratings):
+        self.team_ts_id = team_ts_id
         self.team_id = team_id
         self.team_name = team_name
+        self.date = date
         self.num_employees = num_employees
         self.prod_hours = prod_hours
         self.sales = sales
@@ -41,12 +44,13 @@ class TeamModel(db.Model):
         self.input_data_error = input_data_error
         self.contact_quality = contact_quality
         self.ratings = ratings
-        self.active_counts = active_counts
 
     def json(self):
         return {
+            "team_ts_id": self.team_ts_id,
             "team_id": self.team_id,
             "team_name": self.team_name,
+            "date": dumps(self.date, default=str),
             "num_employees": self.num_employees,
             "prod_hours": self.prod_hours,
             "sales": self.sales,
@@ -57,13 +61,11 @@ class TeamModel(db.Model):
             "absenteeism": self.absenteeism,
             "input_data_error": self.input_data_error,
             "contact_quality": self.contact_quality,
-            "ratings": self.ratings,
-            "active_counts": self.active_counts,
-            "employees": [employee.json() for employee in self.employees.all()]}
+            "ratings": self.ratings}
 
     @classmethod
     def find_by_id(cls, team_id):
-        return cls.query.filter_by(team_id=team_id).first()
+        return cls.query.filter_by(team_id=team_id).all()
 
     def save_to_db(self):
         db.session.add(self)
