@@ -9,6 +9,7 @@ class EmployeeModel(db.Model):
     employee_id = db.Column(db.Integer, primary_key=True)
     firstname = db.Column(db.String(80))
     lastname = db.Column(db.String(80))
+    fullname = db.Column(db.String(80))
 
     team_id = db.Column(db.Integer, db.ForeignKey("teams.team_id"))
     team_name = db.Column(db.String(80))
@@ -33,15 +34,18 @@ class EmployeeModel(db.Model):
 
     employeests = db.relationship("EmployeeTSModel", lazy="dynamic")
 
-    def __init__(self, employee_id, firstname, lastname,
-                 team_name, location_name, prod_hours, sales,
+    def __init__(self, employee_id, firstname, lastname, team_id,
+                 team_name, location_id, location_name, prod_hours, sales,
                  avg_speed_answer, avg_handle, first_call_resolution,
                  customer_satisfaction, absenteeism, input_data_error,
                  contact_quality, ratings, status):
         self.employee_id = employee_id
         self.firstname = firstname
         self.lastname = lastname
+        # fullname will be calculated based on first and last name
+        self.team_id = team_id
         self.team_name = team_name
+        self.location_id = location_id
         self.location_name = location_name
         self.prod_hours = prod_hours
         self.sales = sales
@@ -57,24 +61,26 @@ class EmployeeModel(db.Model):
 
     def json(self):
         return {"employee_id": self.employee_id,
-                "firstname": self.firstname.strip(),
-                "lastname": self.lastname.strip(),
-                "team_name": self.team_name,
-                "location_name": self.location_name,
-                "prod_hours": self.prod_hours,
-                "sales": self.sales,
-                "avg_speed_answer": self.avg_speed_answer,
-                "avg_handle": self.avg_handle,
-                "first_call_resolution": self.first_call_resolution,
-                "customer_satisfaction": self.customer_satisfaction,
-                "absenteeism": self.absenteeism,
-                "input_data_error": self.input_data_error,
-                "contact_quality": self.contact_quality,
-                "ratings": self.ratings,
-                "status": self.status,
-                }
+                 "firstname": self.firstname.strip(),
+                 "lastname": self.lastname.strip(),
+                 "fullname": self.firstname.strip() + " " + self.lastname.strip(),
+                 "team_name": self.team_name,
+                 "location_name": self.location_name,
+                 "prod_hours": self.prod_hours,
+                 "sales": self.sales,
+                 "avg_speed_answer": self.avg_speed_answer,
+                 "avg_handle": self.avg_handle,
+                 "first_call_resolution": self.first_call_resolution,
+                 "customer_satisfaction": self.customer_satisfaction,
+                 "absenteeism": self.absenteeism,
+                 "input_data_error": self.input_data_error,
+                 "contact_quality": self.contact_quality,
+                 "ratings": self.ratings,
+                 "status": self.status,
+                 }
 
     def json_ts(self):
+
         return {"employee_id": self.employee_id,
                 "firstname": self.firstname.strip(),
                 "lastname": self.lastname.strip(),

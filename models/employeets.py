@@ -14,8 +14,7 @@ class EmployeeTSModel(db.Model):
     firstname = db.Column(db.String(80))
     lastname = db.Column(db.String(80))
     fullname = db.Column(db.String(80))
-    team_id = db.Column(db.Integer)
-    # team_id = db.Column(db.Integer, db.ForeignKey("teams.team_id"))
+    team_id = db.Column(db.Integer, db.ForeignKey("teams.team_id"))
     team_name = db.Column(db.String(80))
     location_id = db.Column(db.Integer, db.ForeignKey("locations.location_id"))
     location_name = db.Column(db.String(80))
@@ -32,6 +31,7 @@ class EmployeeTSModel(db.Model):
     # define foreign key
     employee = db.relationship("EmployeeModel")
     location = db.relationship("LocationModel")
+    team = db.relationship("TeamModel")
 
     def __init__(self, employee_ts_id, workdate, employee_id,
                  firstname, lastname, fullname, team_id, team_name,

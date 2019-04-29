@@ -15,11 +15,11 @@ from resources.user import UserRegister
 from security import authenticate, identity
 
 app = Flask(__name__)
+CORS(app)
 # app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:Isaac800@localhost/mpdemo"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.secret_key = 'isaac'
-CORS(app)
 api = Api(app)
 
 
@@ -36,7 +36,7 @@ api.add_resource(Employee, "/employee/employee_id=<string:employee_id>")
 api.add_resource(Employees, "/employees")
 api.add_resource(Location, "/location/location_id=<string:location_id>")
 api.add_resource(LocationList, "/locations")
-api.add_resource(Team, "/teams/team_id=<string:team_id>")
+api.add_resource(Team, "/team/team_id=<string:team_id>")
 api.add_resource(TeamList, "/teams")
 api.add_resource(LocationTS, "/locationts/location_id=<string:location_id>")
 api.add_resource(LocationTSList, "/locationts")
