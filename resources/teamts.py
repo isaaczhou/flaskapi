@@ -51,7 +51,7 @@ class TeamTS(Resource):
 
 
 class TeamTSList(Resource):
-    @jwt_required()
+    # @jwt_required()
     def get(self):
         teamts = [loc.json() for loc in TeamTSModel.query.all()]
         to_return = {
