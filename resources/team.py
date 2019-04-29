@@ -10,7 +10,7 @@ class Team(Resource):
     parser.add_argument("team_name", type=str,
                         required=True, help="This field cannot be left blank!")
 
-    @jwt_required()
+    # @jwt_required()
     def get(self, team_id):
         team = TeamModel.find_by_id(team_id)
         if team:
@@ -51,7 +51,7 @@ class Team(Resource):
 
 
 class TeamList(Resource):
-    @jwt_required()
+    # @jwt_required()
     def get(self):
         teams = [loc.json() for loc in TeamModel.query.all()]
         to_return = {
