@@ -25,7 +25,7 @@ app.secret_key = 'isaac'
 api = Api(app)
 
 app.config['JWT_AUTH_URL_RULE'] = '/login'
-app.config['JWT_EXPIRATION_DELTA'] = timedelta(seconds=86400)
+app.config['JWT_EXPIRATION_DELTA'] = timedelta(seconds=604800)
 jwt = JWT(app, authenticate, identity)
 
 api.add_resource(Employee, "/employee/employee_id=<string:employee_id>")
