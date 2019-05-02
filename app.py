@@ -18,16 +18,11 @@ app = Flask(__name__)
 CORS(app)
 # app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"
 # app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:Isaac800@localhost/mpdemo"
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://fe0oo2iwbrajs3ta:yp9uuiewsjm2m782@r4919aobtbi97j46.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/a18rfhusjbbdpn2z"
+app.config[
+    "SQLALCHEMY_DATABASE_URI"] = "mysql://fe0oo2iwbrajs3ta:yp9uuiewsjm2m782@r4919aobtbi97j46.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/a18rfhusjbbdpn2z"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.secret_key = 'isaac'
 api = Api(app)
-
-
-@app.before_first_request
-def create_tables():
-    db.create_all()
-
 
 app.config['JWT_AUTH_URL_RULE'] = '/login'
 app.config['JWT_EXPIRATION_DELTA'] = timedelta(seconds=86400)
